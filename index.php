@@ -49,8 +49,8 @@ function key2dir($key) {
 }
 
 /*
- * Make sure the IP address makes at most 1 request every 10 seconds.
- * Will return false if IP address made a call less than 10 seconds ago.
+ * Make sure the IP address makes at most 1 request per second.
+ * Will return false if IP address made a request less than 1 second ago.
  */
 function must_wait($ip) {
     $logfile = './data/ip_logs.php';
@@ -61,14 +61,6 @@ function must_wait($ip) {
     require $logfile;
     $ip_logs = $GLOBALS['ip_logs'];
     $t = time();
-    /*
-    // purge file of expired IPs to keep it small
-    foreach($ip_logs as $ip => $time) {
-        if (($t - $time) > 10) {
-            unset($ip_logs[$ip]);
-        }
-    }
-    */
     if (!empty($ip_logs[$ip]) && (($t - $ip_logs[$ip]) < 1)) {
         return true;
     }
@@ -124,6 +116,27 @@ function remove_old_files($dirname, $t){
 }
 
 /*
+ * Remove old ips from the logs
+ *
+ * An ip is old if it has not made a request for more than 30 days.
+ */
+function purge_old_ips($t){
+    $ip_logfile = './data/ip_logs.php';
+    if (is_file($ip_logfile)) {
+        require $ip_logfile;
+        $ip_logs = $GLOBALS['ip_logs'];
+        // purge file of IPs older than one month
+        $t = time();
+        foreach($ip_logs as $ip => $time) {
+            if (($t - $time) > 24 * 30 * 3600) {
+                unset($ip_logs[$ip]);
+            }
+        }
+        file_put_contents($ip_logfile, "<?php\n\$GLOBALS['ip_logs']=" . var_export($ip_logs, true) . ";\n?>");
+    }
+}
+
+/*
  * If it has been more than 24 hours since last cleanup, launch one.
  */
 function autoclean(){
@@ -140,19 +153,7 @@ function autoclean(){
         // remove old files
         remove_old_files("data", $t);
         // clean old ip addresses
-        $ip_logfile = './data/ip_logs.php';
-        if (is_file($ip_logfile)) {
-            require $ip_logfile;
-            $ip_logs = $GLOBALS['ip_logs'];
-            // purge file of IPs older than one month
-            $t = time();
-            foreach($ip_logs as $ip => $time) {
-                if (($t - $time) > 24 * 30 * 3600) {
-                    unset($ip_logs[$ip]);
-                }
-            }
-            file_put_contents($ip_logfile, "<?php\n\$GLOBALS['ip_logs']=" . var_export($ip_logs, true) . ";\n?>");
-        }
+        purge_old_ips($t);
     }
     file_put_contents($cleanup_logfile, "<?php\n\$GLOBALS['last_cleanup']=" . $t . ";\n?>");
 }
