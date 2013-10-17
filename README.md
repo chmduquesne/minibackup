@@ -162,6 +162,17 @@ Unofficially, [minibackup.chmd.fr](https://minibackup.chmd.fr) will run as
 long as there is no legal nor technical problems, and all precautions will
 be taken to keep it safe.
 
+Contributing
+------------
+
+You can browse the code on
+[git.chmd.fr](http://git.chmd.fr/?p=minibackup.git).
+
+    git clone http://git.chmd.fr/minibackup.git
+
+There is also a [github
+mirror](https://github.com/chmduquesne/minibackup).
+
 Quotes
 ------
 
