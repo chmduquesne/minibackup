@@ -126,7 +126,6 @@ function purge_old_ips($t){
         require $ip_logfile;
         $ip_logs = $GLOBALS['ip_logs'];
         // purge file of IPs older than one month
-        $t = time();
         foreach($ip_logs as $ip => $time) {
             if (($t - $time) > 24 * 30 * 3600) {
                 unset($ip_logs[$ip]);
