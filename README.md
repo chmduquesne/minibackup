@@ -4,8 +4,8 @@ Minibackup
 What is this?
 -------------
 
-A free, opensource service that allows you to store
-arbitrary data in the cloud trough simple HTTP requests.
+A free, opensource service that allows you to store arbitrary data online
+trough simple HTTP requests.
 
 Why?
 ----
@@ -126,8 +126,8 @@ Adding encryption on top of the service
 ---------------------------------------
 
 You are encouraged to encrypt your data before uploading it to minibackup.
-The goal is to help you host data in the cloud, not to spy you! To do so,
-you can, for example, use openssl. Assuming your data is in `file.txt`,
+The goal is to help you host data online, not to spy you! To do so, you
+can, for example, use openssl. Assuming your data is in `file.txt`,
 encrypting can be done like this:
 
     $ openssl aes-256-cbc -base64 -in file.txt -out file.txt.enc
